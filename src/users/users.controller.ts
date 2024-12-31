@@ -7,53 +7,28 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('login')
-  async login(@Body() createUserDto : CreateUserDto){
-    try {
-      const data = await this.usersService.login(createUserDto);
-      return data
-    } catch(error) {
-      return 
-    }
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
-  @Post('view_by_id')
-  async userByID(@Body('id') id : number){
-    try{
-      const data = await this.usersService.userById(id);
-      return data
-    }catch (error){
-      return "user with this id not found"
-    }
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
   }
 
-  @Get('view_all')
-  async allUsers(){
-    try{
-      const data = this.usersService.findAllUser();
-      return data
-    } catch(error){
-      return "No user found"
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
   }
 
-  @Post('update_user')
-  async updateUser(@Body() updateUserDto : UpdateUserDto){
-    try{
-      const data = await this.usersService.updateUser(updateUserDto)
-      return data;
-    }catch(error){
-      return "User not exist with this id"
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
   }
 
-  @Post('delete_user')
-  async deleteUser(@Body('id') id:number){
-    try{
-      const data = await this.usersService.deleteUser(id);
-      return data
-    }catch(error){
-      return "user not found"
-    }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }
