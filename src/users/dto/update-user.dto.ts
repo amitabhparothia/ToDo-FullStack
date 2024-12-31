@@ -13,5 +13,8 @@ export class UpdateUserDto {
     email:string
 
     @IsOptional()
+    password:string
+
+    @IsOptional()
     phoneNo:number
 }
