@@ -16,7 +16,6 @@ export class UsersService {
   async login (createUserDto : CreateUserDto) {
     const{email , first_name ,last_name ,password , phoneNo } = createUserDto
 
-<<<<<<< HEAD
     //Check the user in the database
     const userResult = await this.userRepository.findOne({
       where : {email : email}
@@ -31,23 +30,11 @@ export class UsersService {
 
     if(!userResult){
       //Use the TypeORM method to save the user
-=======
-    //Check the user is alredy in the database or not 
-    const userResult = await this.userRepository.findOne({
-      where : {email : email}
-    });
-
-    if(userResult){
-      return "User already exist"
-    }
-    else{
->>>>>>> 30cf372 (Add user Apis)
       const user = this.userRepository.create({
         email,
         first_name,
         last_name,
         password,
-<<<<<<< HEAD
         phone_number : phoneNo,
         status :'active',
         is_deleted: false
@@ -74,24 +61,15 @@ export class UsersService {
       console.log("user already exist")
       return "User already exist"
     }
-=======
-        phone_number : phoneNo
-      })
-      const newUser = await this.userRepository.save(user);
-      return newUser
-    } 
->>>>>>> 30cf372 (Add user Apis)
   }
 
 
   // Find User By Id
   async userById(id : number) {
-<<<<<<< HEAD
   //Use TypeORM Method to find the user
     const userResult = await this.userRepository.findOne({
       where: {id , is_deleted:false}
     })
-
 
   //Use RawSQL in TypeORM to find the user
     // const findUserQuery = `
@@ -101,17 +79,9 @@ export class UsersService {
     // const parameters = [id , false]
 
     // const userResult = await this.userRepository.query(findUserQuery , parameters)
-
-=======
-    const userResult = await this.userRepository.findOne({
-      where: {id , is_deleted:false}
-    })
-
->>>>>>> 30cf372 (Add user Apis)
     if(!userResult){
       throw new NotFoundException('User with this Id not found');
     }
-
     return userResult
   }
 
@@ -125,10 +95,7 @@ export class UsersService {
     if(!users){
       throw new NotFoundException("Users not retrieved Successfully")
     }
-<<<<<<< HEAD
     console.log("Users" , users)
-=======
->>>>>>> 30cf372 (Add user Apis)
     return users
   }
 
