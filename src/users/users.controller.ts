@@ -11,9 +11,9 @@ export class UsersController {
   async login(@Body() createUserDto : CreateUserDto){
     try {
       const data = await this.usersService.login(createUserDto);
-      return (data)
+      return data
     } catch(error) {
-      return error 
+      return 
     }
   }
 
@@ -23,17 +23,17 @@ export class UsersController {
       const data = await this.usersService.userById(id);
       return data
     }catch (error){
-      return error
+      return "user with this id not found"
     }
   }
 
   @Get('view_all')
   async allUsers(){
     try{
-      const data = this.usersService.findAllUser;
+      const data = this.usersService.findAllUser();
       return data
     } catch(error){
-      return error
+      return "No user found"
     }
   }
 
@@ -43,7 +43,7 @@ export class UsersController {
       const data = await this.usersService.updateUser(updateUserDto)
       return data;
     }catch(error){
-      return error
+      return "User not exist with this id"
     }
   }
 
@@ -53,7 +53,7 @@ export class UsersController {
       const data = await this.usersService.deleteUser(id);
       return data
     }catch(error){
-      return error
+      return "user not found"
     }
   }
 }

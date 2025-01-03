@@ -16,5 +16,5 @@ export class UpdateUserDto {
     password:string
 
     @IsOptional()
-    phoneNo:number
+    phoneNo:string
 }

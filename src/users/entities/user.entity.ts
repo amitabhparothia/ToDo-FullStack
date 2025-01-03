@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-Entity('users')
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id:number
@@ -18,7 +18,7 @@ export class User {
     password:string
     
     @Column()
-    phone_number:number
+    phone_number:string
 
     @Column()
     status:string
@@ -31,6 +31,4 @@ export class User {
 
     @UpdateDateColumn()
     updated_at:Date
-
-
 }

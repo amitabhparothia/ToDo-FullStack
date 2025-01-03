@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TodoModule } from './todo/todo.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -15,12 +16,13 @@ import { TodoModule } from './todo/todo.module';
       useFactory : (ConfigService : ConfigService) => ({
           type : "postgres",
           host : ConfigService.get("DATABASE_HOST"),
-          post : ConfigService.get<number>("DATABASE_PORT"),
+          port : ConfigService.get<number>("DATABASE_PORT"),
           database : ConfigService.get("DATABASE_NAME"),
           username : ConfigService.get("DATABASE_USERNAME"),
           password : ConfigService.get("DATABASE_PASSWORD"),
-          synchronize : ConfigService.get<boolean>("DATABASE_SYNC"),
-          logging : ConfigService.get<boolean>("DATABASE_LOGGING")
+          synchronize : false,
+          logging : true,
+          entities : [User]
       })
     }),
     UsersModule,

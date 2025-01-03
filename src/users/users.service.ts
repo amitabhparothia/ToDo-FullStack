@@ -16,33 +16,70 @@ export class UsersService {
   async login (createUserDto : CreateUserDto) {
     const{email , first_name ,last_name ,password , phoneNo } = createUserDto
 
-    //Check the user is alredy in the database or not 
+    //Check the user in the database
     const userResult = await this.userRepository.findOne({
-      where : {email}
+      where : {email : email}
     });
 
-    if(userResult){
-      return "User already exist"
-    }
-    else{
+    // const userQuery = `
+    // SELECT * FROM "users"
+    // WHERE email = $1 AND is_deleted = $2`;
+
+    // const parameters = [email , false]
+    // const userResult = await this.userRepository.query(userQuery , parameters)
+
+    if(!userResult){
+      //Use the TypeORM method to save the user
       const user = this.userRepository.create({
         email,
         first_name,
         last_name,
         password,
-        phone_number : phoneNo
+        phone_number : phoneNo,
+        status :'active',
+        is_deleted: false
       })
       const newUser = await this.userRepository.save(user);
       return newUser
-    } 
+
+
+      //Use RawSQL to save the user 
+      // const insertQuery = `
+      // INSERT INTO "users" 
+      // (first_name , last_name , email , password , phone_number , status , is_deleted , created_at , updated_at)
+      // VALUES ($1, $2, $3, $4, $5, $6 , $7 , NOW(), NOW())
+      // RETURNING *;`;
+
+      // const parameters = [
+      //   first_name , last_name , email , password ,phoneNo , 'active' , false  
+      // ]
+      
+      // const user = await this.userRepository.query(insertQuery ,parameters);
+      // const newUser = user[0]
+      // return newUser
+    }else{
+      console.log("user already exist")
+      return "User already exist"
+    }
   }
 
 
   // Find User By Id
   async userById(id : number) {
+  //Use TypeORM Method to find the user
     const userResult = await this.userRepository.findOne({
-      where: {id : id , is_deleted:false}
+      where: {id , is_deleted:false}
     })
+
+
+  //Use RawSQL in TypeORM to find the user
+    // const findUserQuery = `
+    //   SELECT * FROM "users"
+    //   WHERE id = $1  AND is_deleted = $2`
+      
+    // const parameters = [id , false]
+
+    // const userResult = await this.userRepository.query(findUserQuery , parameters)
 
     if(!userResult){
       throw new NotFoundException('User with this Id not found');
@@ -61,6 +98,7 @@ export class UsersService {
     if(!users){
       throw new NotFoundException("Users not retrieved Successfully")
     }
+    console.log("Users" , users)
     return users
   }
 
