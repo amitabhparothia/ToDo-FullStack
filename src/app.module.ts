@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TodoModule } from './todo/todo.module';
 import { User } from './users/entities/user.entity';
+import { Todo } from './todo/entities/todo.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { User } from './users/entities/user.entity';
           password : ConfigService.get("DATABASE_PASSWORD"),
           synchronize : false,
           logging : true,
-          entities : [User]
+          entities : [User , Todo]
       })
     }),
     UsersModule,

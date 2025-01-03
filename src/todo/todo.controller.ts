@@ -5,30 +5,18 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @Controller('todo')
 export class TodoController {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    private readonly todoService: TodoService
+  ) {}
 
-  @Post()
-  create(@Body() createTodoDto: CreateTodoDto) {
-    return this.todoService.create(createTodoDto);
-  }
+  @Post('add_todo')
+  async add(@Body() createTodoDto : CreateTodoDto){
+    try{
+      const data = await this.todoService.add(createTodoDto)
+      return data
+    }catch{
+      return "user with this id is not found"
+    }
 
-  @Get()
-  findAll() {
-    return this.todoService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-    return this.todoService.update(+id, updateTodoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.todoService.remove(+id);
   }
 }

@@ -6,19 +6,19 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class UsersService { 
+export class UsersService {
   constructor(
     @InjectRepository(User)
-    public readonly userRepository : Repository<User> 
-  ){}
+    public readonly userRepository: Repository<User>
+  ) { }
 
   // ADD User 
-  async login (createUserDto : CreateUserDto) {
-    const{email , first_name ,last_name ,password , phoneNo } = createUserDto
+  async login(createUserDto: CreateUserDto) {
+    const { email, first_name, last_name, password, phoneNo } = createUserDto
 
     //Check the user in the database
     const userResult = await this.userRepository.findOne({
-      where : {email : email}
+      where: { email: email }
     });
 
     // const userQuery = `
@@ -28,15 +28,15 @@ export class UsersService {
     // const parameters = [email , false]
     // const userResult = await this.userRepository.query(userQuery , parameters)
 
-    if(!userResult){
+    if (!userResult) {
       //Use the TypeORM method to save the user
       const user = this.userRepository.create({
         email,
         first_name,
         last_name,
         password,
-        phone_number : phoneNo,
-        status :'active',
+        phone_number: phoneNo,
+        status: 'active',
         is_deleted: false
       })
       const newUser = await this.userRepository.save(user);
@@ -53,11 +53,11 @@ export class UsersService {
       // const parameters = [
       //   first_name , last_name , email , password ,phoneNo , 'active' , false  
       // ]
-      
+
       // const user = await this.userRepository.query(insertQuery ,parameters);
       // const newUser = user[0]
       // return newUser
-    }else{
+    } else {
       console.log("user already exist")
       return "User already exist"
     }
@@ -65,13 +65,13 @@ export class UsersService {
 
 
   // Find User By Id
-  async userById(id : number) {
-  //Use TypeORM Method to find the user
+  async userById(id: number) {
+    //Use TypeORM Method to find the user
     const userResult = await this.userRepository.findOne({
-      where: {id , is_deleted:false}
+      where: { id, is_deleted: false }
     })
 
-    if(!userResult){
+    if (!userResult) {
       throw new NotFoundException('User with this Id not found');
     }
 
@@ -82,35 +82,35 @@ export class UsersService {
   // Find All Users
   async findAllUser() {
     const users = await this.userRepository.find({
-      where : {is_deleted : false}
+      where: { is_deleted: false }
     })
 
-    if(!users){
+    if (!users) {
       throw new NotFoundException("Users not retrieved Successfully")
     }
-    console.log("Users" , users)
+    console.log("Users", users)
     return users
   }
 
 
   //Update the User
-  async updateUser(updateUserDto : UpdateUserDto){
-    const{id , first_name , last_name , email , password , phoneNo} = updateUserDto
+  async updateUser(updateUserDto: UpdateUserDto) {
+    const { id, first_name, last_name, email, password, phoneNo } = updateUserDto
 
     const user = await this.userRepository.findOne({
-      where : {id , is_deleted:false}
+      where: { id, is_deleted: false }
     })
 
-    if(!user){
+    if (!user) {
       throw new NotFoundException("User not found with this id")
     }
 
     //update the user with the new value
     user.first_name = first_name,
-    user.last_name = last_name,
-    user.email = email ,
-    user.password = password,
-    user.phone_number = phoneNo
+      user.last_name = last_name,
+      user.email = email,
+      user.password = password,
+      user.phone_number = phoneNo
 
     //save the user in the database 
     const newUser = await this.userRepository.save(user)
@@ -120,13 +120,13 @@ export class UsersService {
 
 
   //Delete User By Id
-  async deleteUser(id : number){
+  async deleteUser(id: number) {
     //Check User already exist or not 
     const existingUser = await this.userRepository.findOne({
-      where : {id , is_deleted:false}
+      where: { id, is_deleted: false }
     })
 
-    if(!existingUser){
+    if (!existingUser) {
       throw new NotFoundException('User Not found');
     }
 
@@ -137,12 +137,12 @@ export class UsersService {
     WHERE id = $2
     RETURNING *;
     `;
-    const parameters = [true ,id];
+    const parameters = [true, id];
 
     //Execute the query
-    const result = await this.userRepository.query(query , parameters);
+    const result = await this.userRepository.query(query, parameters);
 
-    if(!result.length){
+    if (!result.length) {
       throw new NotFoundException('Failed to delete the user')
     }
     return result[0]

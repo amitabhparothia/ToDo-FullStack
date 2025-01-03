@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Todo } from './entities/todo.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class TodoService {
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
-  }
+    constructor(
+        @InjectRepository(Todo)
+        public readonly todoRepository: Repository<Todo>,
 
-  findAll() {
-    return `This action returns all todo`;
-  }
+        @InjectRepository(User)
+        public readonly userRepository: Repository<User>
+    ) { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
-  }
+    async add(createTodoDto:CreateTodoDto){
+        const{userId , title , description} = createTodoDto
+        //check the user in the db or not
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
-  }
+        const userResult = await this.userRepository.findOne({
+            where : {id : userId , is_deleted:false}
+        })
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
-  }
+        console.log("userresult" , userResult)
+
+        if(userResult){
+            const todo = this.todoRepository.create({
+                userId,
+                title,
+                description,
+                completed:false,
+                is_deleted : false
+                // if you dont want to define the date related things here the define in db ( use -> now() )
+            })
+
+            console.log("Todo " , todo)
+
+            const createTodo = await this.todoRepository.save(todo)
+            console.log("createTodo " , createTodo)
+            return createTodo
+        }
+    }
+
 }
