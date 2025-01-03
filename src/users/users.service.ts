@@ -34,7 +34,7 @@ export class UsersService {
 =======
     //Check the user is alredy in the database or not 
     const userResult = await this.userRepository.findOne({
-      where : {email}
+      where : {email : email}
     });
 
     if(userResult){
@@ -104,7 +104,7 @@ export class UsersService {
 
 =======
     const userResult = await this.userRepository.findOne({
-      where: {id : id , is_deleted:false}
+      where: {id , is_deleted:false}
     })
 
 >>>>>>> 30cf372 (Add user Apis)
