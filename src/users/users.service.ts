@@ -70,15 +70,7 @@ export class UsersService {
     const userResult = await this.userRepository.findOne({
       where: {id , is_deleted:false}
     })
-
-  //Use RawSQL in TypeORM to find the user
-    // const findUserQuery = `
-    //   SELECT * FROM "users"
-    //   WHERE id = $1  AND is_deleted = $2`
-      
-    // const parameters = [id , false]
-
-    // const userResult = await this.userRepository.query(findUserQuery , parameters)
+    
     if(!userResult){
       throw new NotFoundException('User with this Id not found');
     }
